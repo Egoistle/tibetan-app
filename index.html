@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tibetan Study</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Jomolhari&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Jomolhari&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap"
+        rel="stylesheet">
     <style>
         [lang="bo"] {
             font-size: 1.95em;
             font-family: "Kailasa", serif;
         }
+
         body {
             margin: 0;
             font-family: "DM Sans", system-ui, sans-serif;
             background: #F7F2E8;
             color: #292929;
         }
+
         nav {
             position: fixed;
             bottom: 0;
@@ -41,10 +46,11 @@
             padding: 8px 0;
             gap: 2px;
         }
+
         main {
             padding: 0px 0px 100px;
         }
-        
+
         nav button.active {
             background: #44080a;
         }
@@ -67,7 +73,7 @@
             width: 100%;
             max-width: 220px;
         }
-        
+
         .word p {
             margin: 4px 0;
         }
@@ -76,19 +82,27 @@
             font-size: 2.2em;
             font-family: "Jomolhari", "Kailasa", serif;
         }
+
         .ipa {
             font-size: 0.85em;
             margin-bottom: 8px;
             font-family: monospace;
             color: #797979;
         }
+
         .answer {
             font-family: courier, monospace;
             margin-bottom: 8px;
         }
 
-        section {display: none;}
-        section.active {display: block;}
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
         header {
             position: sticky;
             top: 0;
@@ -119,8 +133,13 @@
             font-family: monospace;
         }
 
-        #flashcard .back {display: none;}
-        #flashcard.flipped .back {display: block;}
+        #flashcard .back {
+            display: none;
+        }
+
+        #flashcard.flipped .back {
+            display: block;
+        }
 
         #flashcard {
             background: #F7F2E8;
@@ -197,6 +216,7 @@
             background: #d8a6a6;
             transition: none;
         }
+
         #good:active {
             background: #8a9b7a;
             transition: none;
@@ -222,10 +242,18 @@
             color: #494949;
         }
 
-        #lesson-view {display: none;}
-        #grammar.reading #lesson-list {display: none;}
-        #grammar.reading #lesson-view {display: block;}
-        
+        #lesson-view {
+            display: none;
+        }
+
+        #grammar.reading #lesson-list {
+            display: none;
+        }
+
+        #grammar.reading #lesson-view {
+            display: block;
+        }
+
         .lesson-card {
             background: #F7F2E8;
             border: #d6a24a double 5px;
@@ -246,6 +274,7 @@
                 background: #eddbc8;
             }
         }
+
         .lesson-card:active {
             background: #e1c6a8;
             transition: none;
@@ -283,6 +312,7 @@
                 background: #ecdbc8;
             }
         }
+
         #lesson-back:active {
             background: #e1c6a8;
             transition: none;
@@ -314,7 +344,7 @@
 
         #lesson-content .example [lang="bo"] {
             font-size: 1.2em;
-            font-family:"Kailasa", serif;
+            font-family: "Kailasa", serif;
         }
 
         #lesson-content p [lang="bo"] {
@@ -341,21 +371,33 @@
             transition: background 0.8s, color 0.6s;
             color: #292929;
         }
-        
+
         @media (hover: hover) {
             .quiz-option:hover {
                 background: #ecdbc8;
             }
         }
+
         .quiz-option:active {
             background: #e1c6a8;
             transition: 0.3s;
         }
 
         @keyframes to-correct {
-            0% {background: #F7F2E8; color: #292929;}
-            50% {background: #b9c4ad; color: #71776b;}
-            100% {background: #8a9b7a; color: #F7F2E8;}
+            0% {
+                background: #F7F2E8;
+                color: #292929;
+            }
+
+            50% {
+                background: #b9c4ad;
+                color: #71776b;
+            }
+
+            100% {
+                background: #8a9b7a;
+                color: #F7F2E8;
+            }
         }
 
         .quiz-option.correct {
@@ -363,9 +405,20 @@
         }
 
         @keyframes to-wrong {
-            0% {background: #F7F2E8; color: #292929;}
-            50% {background: #e1bcbc; color: #857373;}
-            100% {background: #d8a6a6; color: #F7F2E8;}
+            0% {
+                background: #F7F2E8;
+                color: #292929;
+            }
+
+            50% {
+                background: #e1bcbc;
+                color: #857373;
+            }
+
+            100% {
+                background: #d8a6a6;
+                color: #F7F2E8;
+            }
         }
 
         .quiz-option.wrong {
@@ -378,9 +431,9 @@
             text-align: center;
             margin-bottom: 16px;
         }
-
     </style>
 </head>
+
 <body ontouchstart="">
     <main>
         <section id="study" class="active">
@@ -458,12 +511,12 @@
     </nav>
     <script>
         const words = [
-            {tibetan: "ཆུ་", wylie: "chu", ipa: "/tɕʰu˥/", english: "water"},
-            {tibetan: "ཇ་", wylie: "ja", ipa: "/tɕʰa˩˧/", english: "tea"},
-            {tibetan: "དེབ་", wylie: "deb", ipa: "/tʰep˩˧/", english: "book"},
-            {tibetan: "མེ་", wylie: "me", ipa: "/me˩˧/", english: "fire"},
-            {tibetan: "རི་བོ་", wylie: "ri bo", ipa: "/ɹi˩˧.wo˥/", english: "mountain"},
-            {tibetan: "ཤོག་བུ་", wylie: "shog bu", ipa: "/ɕoʔ˥˧.pu˥/", english: "paper"}
+            { tibetan: "ཆུ་", wylie: "chu", ipa: "/tɕʰu˥/", english: "water" },
+            { tibetan: "ཇ་", wylie: "ja", ipa: "/tɕʰa˩˧/", english: "tea" },
+            { tibetan: "དེབ་", wylie: "deb", ipa: "/tʰep˩˧/", english: "book" },
+            { tibetan: "མེ་", wylie: "me", ipa: "/me˩˧/", english: "fire" },
+            { tibetan: "རི་བོ་", wylie: "ri bo", ipa: "/ɹi˩˧.wo˥/", english: "mountain" },
+            { tibetan: "ཤོག་བུ་", wylie: "shog bu", ipa: "/ɕoʔ˥˧.pu˥/", english: "paper" }
         ];
 
         const lessons = [
@@ -472,9 +525,9 @@
                 summary: "Personal vs. objective copula",
                 body: "Lhasa Tibetan has several verbs for 'to be'. <span lang=\"bo\">ཡིན་</span> is used when speaking about yourself (and asking someone about themselves). <span lang=\"bo\">རེད་</span> is used for statements about other people and things.",
                 examples: [
-                    {tibetan: "ང་སློབ་ཕྲུག་ཡིན།", wylie: "nga slob phrug yin", english: "I am a student."},
-                    {tibetan: "ཁོང་དགེ་རྒན་རེད།", wylie: "khong dge rgan red", english: "He/she is a teacher."},
-                    {tibetan: "འདི་དེབ་རེད།", wylie: "'di deb red", english: "This is a book."}
+                    { tibetan: "ང་སློབ་ཕྲུག་ཡིན།", wylie: "nga slob phrug yin", english: "I am a student." },
+                    { tibetan: "ཁོང་དགེ་རྒན་རེད།", wylie: "khong dge rgan red", english: "He/she is a teacher." },
+                    { tibetan: "འདི་དེབ་རེད།", wylie: "'di deb red", english: "This is a book." }
                 ]
             }
         ];
@@ -519,34 +572,34 @@
         showWords(words);
 
         document.getElementById("word-list").addEventListener("click", function (event) {
-                if (event.target.classList.contains("add-card")) {
-                    const wylie = event.target.dataset.wylie;
-                    if (!deck.includes(wylie)) {
-                        deck.push(wylie);
-                        saveDeck();
-                        event.target.textContent = "Review now";
-                        event.target.classList.replace("add-card", "review-now");
-                        buildQueue();
-                        showCard();
-                    }
-                } else if (event.target.classList.contains("review-now")) {
-                    const wylie = event.target.dataset.wylie;
-                    const word = words.find(function (w) { 
-                        return w.wylie === wylie;
-                    });
-                    const p = getProgress(word);
-                    p.interval = 0;
-                    p.due = Date.now();
-                    saveProgress();
+            if (event.target.classList.contains("add-card")) {
+                const wylie = event.target.dataset.wylie;
+                if (!deck.includes(wylie)) {
+                    deck.push(wylie);
+                    saveDeck();
+                    event.target.textContent = "Review now";
+                    event.target.classList.replace("add-card", "review-now");
                     buildQueue();
                     showCard();
-                    const btn = event.target;
-                    btn.textContent = "Added to review";
-                    setTimeout(function () {
-                        btn.textContent = "Review now";
-                    }, 1500);
                 }
+            } else if (event.target.classList.contains("review-now")) {
+                const wylie = event.target.dataset.wylie;
+                const word = words.find(function (w) {
+                    return w.wylie === wylie;
                 });
+                const p = getProgress(word);
+                p.interval = 0;
+                p.due = Date.now();
+                saveProgress();
+                buildQueue();
+                showCard();
+                const btn = event.target;
+                btn.textContent = "Added to review";
+                setTimeout(function () {
+                    btn.textContent = "Review now";
+                }, 1500);
+            }
+        });
 
         const searchBox = document.getElementById("search");
 
@@ -554,8 +607,8 @@
             const query = searchBox.value.toLowerCase();
             const results = words.filter(function (word) {
                 return word.english.toLowerCase().includes(query)
-                || word.wylie.toLowerCase().includes(query)
-                || word.tibetan.includes(query);
+                    || word.wylie.toLowerCase().includes(query)
+                    || word.tibetan.includes(query);
             });
             showWords(results);
         })
@@ -578,7 +631,7 @@
             card.classList.remove("flipped");
         }
 
-        card.addEventListener("click", function (){
+        card.addEventListener("click", function () {
             if (queue.length === 0) {
                 card.classList.remove("flipped");
                 return;
@@ -591,7 +644,7 @@
 
         function getProgress(word) {
             if (!progress[word.wylie]) {
-                progress[word.wylie] = {interval: 0, due: 0};
+                progress[word.wylie] = { interval: 0, due: 0 };
             }
             return progress[word.wylie];
         }
@@ -700,14 +753,14 @@
         });
 
         const letterGroups = [
-            [ {letter: "ཀ", wylie: "ka"}, {letter: "ཁ", wylie: "kha"}, {letter: "ག", wylie: "ga"}, {letter: "ང", wylie: "nga"} ],
-            [ {letter: "ཅ", wylie: "ca"}, {letter: "ཆ", wylie: "cha"}, {letter: "ཇ", wylie: "ja"}, {letter: "ཉ", wylie: "nya"} ],
-            [ {letter: "ཏ", wylie: "ta"}, {letter: "ཐ", wylie: "tha"}, {letter: "ད", wylie: "da"}, {letter: "ན", wylie: "na"} ],
-            [ {letter: "པ", wylie: "pa"}, {letter: "ཕ", wylie: "pha"}, {letter: "བ", wylie: "ba"}, {letter: "མ", wylie: "ma"} ],
-            [ {letter: "ཙ", wylie: "tsa"}, {letter: "ཚ", wylie: "tsha"}, {letter: "ཛ", wylie: "dza"}, {letter: "ཝ", wylie: "wa"} ],
-            [ {letter: "ཞ", wylie: "zha"}, {letter: "ཟ", wylie: "za"}, {letter: "འ", wylie: "'a"}, {letter: "ཡ", wylie: "ya"} ],
-            [ {letter: "ར", wylie: "ra"}, {letter: "ལ", wylie: "la"}, {letter: "ས", wylie: "sa"}, {letter: "ཤ", wylie: "sha"} ],
-            [ {letter: "ཧ", wylie: "ha"},{letter: "ཨ", wylie: "a"} ]
+            [{ letter: "ཀ", wylie: "ka" }, { letter: "ཁ", wylie: "kha" }, { letter: "ག", wylie: "ga" }, { letter: "ང", wylie: "nga" }],
+            [{ letter: "ཅ", wylie: "ca" }, { letter: "ཆ", wylie: "cha" }, { letter: "ཇ", wylie: "ja" }, { letter: "ཉ", wylie: "nya" }],
+            [{ letter: "ཏ", wylie: "ta" }, { letter: "ཐ", wylie: "tha" }, { letter: "ད", wylie: "da" }, { letter: "ན", wylie: "na" }],
+            [{ letter: "པ", wylie: "pa" }, { letter: "ཕ", wylie: "pha" }, { letter: "བ", wylie: "ba" }, { letter: "མ", wylie: "ma" }],
+            [{ letter: "ཙ", wylie: "tsa" }, { letter: "ཚ", wylie: "tsha" }, { letter: "ཛ", wylie: "dza" }, { letter: "ཝ", wylie: "wa" }],
+            [{ letter: "ཞ", wylie: "zha" }, { letter: "ཟ", wylie: "za" }, { letter: "འ", wylie: "'a" }, { letter: "ཡ", wylie: "ya" }],
+            [{ letter: "ར", wylie: "ra" }, { letter: "ལ", wylie: "la" }, { letter: "ས", wylie: "sa" }, { letter: "ཤ", wylie: "sha" }],
+            [{ letter: "ཧ", wylie: "ha" }, { letter: "ཨ", wylie: "a" }]
         ];
 
         function randomItem(list) {
@@ -732,7 +785,7 @@
 
         function getStats(letter) {
             if (!letterStats[letter]) {
-                letterStats[letter] = {right: 0, wrong: 0};
+                letterStats[letter] = { right: 0, wrong: 0 };
             }
             return letterStats[letter];
         }
@@ -818,6 +871,11 @@
         if (savedTab) {
             showScreen(savedTab);
         }
+
+        if("serviceWorker" in navigator) {
+            navigator.serviceworker.register("sw.js");
+        }
     </script>
 </body>
+
 </html>
