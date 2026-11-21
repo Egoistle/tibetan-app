@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tibetan Study</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Jomolhari&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+    <style>
+        [lang="bo"] {
+            font-size: 1.95em;
+            font-family: "Kailasa", serif;
+        }
+        body {
+            margin: 0;
+            font-family: "DM Sans", system-ui, sans-serif;
+            background: #F7F2E8;
+            color: #292929;
+        }
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: #F7F2E8;
+        }
+
+        nav button {
+            color: #F7F2E8;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #7A1E24;
+            border-radius: 18px;
+            border: none;
+            padding: 8px 0;
+            gap: 2px;
+        }
+        main {
+            padding: 0px 0px 100px;
+        }
+        
+        nav button.active {
+            background: #44080a;
+        }
+
+        #word-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 35px;
+            justify-items: center;
+        }
+
+        .word {
+            background: #F7F2E8;
+            text-align: center;
+            padding: 16px 8px;
+            border-radius: 15px;
+            border-color: #d6a24a;
+            border-style: double;
+            border-width: 5px;
+            width: 100%;
+            max-width: 220px;
+        }
+        
+        .word p {
+            margin: 4px 0;
+        }
+
+        .word [lang="bo"] {
+            font-size: 2.2em;
+            font-family: "Jomolhari", "Kailasa", serif;
+        }
+        .ipa {
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            font-family: monospace;
+            color: #797979;
+        }
+        .answer {
+            font-family: courier, monospace;
+            margin-bottom: 8px;
+        }
+
+        section {display: none;}
+        section.active {display: block;}
+        header {
+            position: sticky;
+            top: 0;
+            background: #2f3f61;
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        header h1,
+        header p {
+            margin: 2px;
+            color: #F7F2E8;
+        }
+
+        header h1 {
+            font-size: 1.4em;
+            font-family: "DM Sans", sans-serif;
+        }
+
+        header [lang="bo"] {
+            font-size: 2.4em;
+            font-family: "Kailasa";
+        }
+
+        .content {
+            padding: 0 16px;
+            font-family: monospace;
+        }
+
+        #flashcard .back {display: none;}
+        #flashcard.flipped .back {display: block;}
+
+        #flashcard {
+            background: #F7F2E8;
+            border: #d6a24a;
+            border-style: double;
+            border-radius: 15px;
+            text-align: center;
+            border-width: 5px;
+            width: 100%;
+            max-width: 230px;
+            margin: 0 auto;
+            padding: 5px;
+        }
+
+        #flashcard p {
+            margin: 4px 0;
+        }
+
+        #flashcard .front {
+            font-size: 3em;
+            font-family: monospace, "Jomolhari", serif;
+            padding: 16px;
+        }
+
+        #flashcard .ipa {
+            background: #ecdbc8;
+            margin: 0;
+            padding-top: 40px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        #flashcard .answer {
+            background: #ecdbc8;
+            margin: 0;
+            padding-bottom: 40px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        #rating {
+            display: flex;
+            gap: 10px;
+        }
+
+        #rating button {
+            flex: 1;
+            display: block;
+            background: #F7F2E8;
+            border: #d6a24a double 5px;
+            border-radius: 15px;
+            text-align: center;
+            width: 100%;
+            max-width: 230px;
+            margin: 16px auto;
+            padding: 16px;
+            font-size: 1.1em;
+            font-family: monospace;
+            transition: background 0.8s;
+            color: #292929;
+        }
+
+        @media (hover: hover) {
+            #again:hover {
+                background: #ecdbc8;
+            }
+
+            #good:hover {
+                background: #ecdbc8;
+            }
+        }
+
+        #again:active {
+            background: #d8a6a6;
+            transition: none;
+        }
+        #good:active {
+            background: #8a9b7a;
+            transition: none;
+        }
+
+        #search {
+            background: #ecdbc8;
+            display: block;
+            border-radius: 6px;
+            border-color: #d6a24a;
+            border-style: solid;
+            margin-top: 5px;
+            border-width: 2px;
+            padding: 5px;
+            appearance: none;
+            box-sizing: content-box;
+            font-family: monospace;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        #search::placeholder {
+            color: #494949;
+        }
+
+        #lesson-view {display: none;}
+        #grammar.reading #lesson-list {display: none;}
+        #grammar.reading #lesson-view {display: block;}
+        
+        .lesson-card {
+            background: #F7F2E8;
+            border: #d6a24a double 5px;
+            border-radius: 15px;
+            text-align: center;
+            width: 100%;
+            max-width: 230px;
+            margin: 16px auto;
+            padding: 16px;
+            font-size: 1.1em;
+            font-family: monospace;
+            transition: background 0.8s;
+            color: #292929;
+        }
+
+        @media (hover: hover) {
+            .lesson-card:hover {
+                background: #eddbc8;
+            }
+        }
+        .lesson-card:active {
+            background: #e1c6a8;
+            transition: none;
+        }
+
+
+        .lesson-card h2 {
+            font-size: 1.6em;
+            font-family: "DM Sans", "Jomolhari", sans-serif;
+        }
+
+        .lesson-card p {
+            font-size: 1.1em;
+            font-family: monospace;
+        }
+
+        #lesson-back {
+            background: #F7F2E8;
+            display: block;
+            border: #d6a24a double 5px;
+            border-radius: 15px;
+            text-align: center;
+            width: 100%;
+            max-width: 230px;
+            margin: 16px auto;
+            padding: 16px;
+            font-size: 1.1em;
+            font-family: monospace;
+            transition: background 0.8s;
+            color: #292929;
+        }
+
+        @media (hover: hover) {
+            #lesson-back:hover {
+                background: #ecdbc8;
+            }
+        }
+        #lesson-back:active {
+            background: #e1c6a8;
+            transition: none;
+        }
+
+        #lesson-content h2 {
+            font-size: 1.6em;
+            font-family: "DM Sans", "Jomolhari", sans-serif;
+        }
+
+        #lesson-content p {
+            font-size: 1.1em;
+            font-family: monospace;
+        }
+
+        .example {
+            background: #F7F2E8;
+            border: #d6a24a double 5px;
+            border-radius: 15px;
+            text-align: center;
+            width: 100%;
+            max-width: 230px;
+            margin: 16px auto;
+            padding: 16px;
+            font-size: 1.1em;
+            font-family: monospace;
+            color: #292929;
+        }
+
+        #lesson-content .example [lang="bo"] {
+            font-size: 1.2em;
+            font-family:"Kailasa", serif;
+        }
+
+        #lesson-content p [lang="bo"] {
+            font-size: 1.2em;
+            font-family: "Kailasa", serif;
+        }
+
+        #quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: #F7F2E8;
+        }
+
+        .quiz-option {
+            background: #F7F2E8;
+            border: #d6a24a double 5px;
+            border-radius: 15px;
+            text-align: center;
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1em;
+            font-family: monospace;
+            transition: background 0.8s, color 0.6s;
+            color: #292929;
+        }
+        
+        @media (hover: hover) {
+            .quiz-option:hover {
+                background: #ecdbc8;
+            }
+        }
+        .quiz-option:active {
+            background: #e1c6a8;
+            transition: 0.3s;
+        }
+
+        @keyframes to-correct {
+            0% {background: #F7F2E8; color: #292929;}
+            50% {background: #b9c4ad; color: #71776b;}
+            100% {background: #8a9b7a; color: #F7F2E8;}
+        }
+
+        .quiz-option.correct {
+            animation: to-correct 0.4s forwards;
+        }
+
+        @keyframes to-wrong {
+            0% {background: #F7F2E8; color: #292929;}
+            50% {background: #e1bcbc; color: #857373;}
+            100% {background: #d8a6a6; color: #F7F2E8;}
+        }
+
+        .quiz-option.wrong {
+            animation: to-wrong 0.4s forwards;
+        }
+
+        #quiz-letter {
+            font-size: 3em;
+            font-family: "Jomolhari", "Kailasa", serif;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+    </style>
+</head>
+<body ontouchstart="">
+    <main>
+        <section id="study" class="active">
+            <header>
+                <h1>Study</h1>
+                <p lang="bo">སློབ་སྦྱོང་</p>
+            </header>
+            <div class="content">
+                <div id="flashcard">
+                    <p class="front" lang="bo"></p>
+                    <div class="back">
+                        <p class="ipa"></p>
+                        <p class="answer"></p>
+                    </div>
+                </div>
+                <div id="rating">
+                    <button id="good">Got it</button>
+                    <button id="again">Again</button>
+                </div>
+            </div>
+        </section>
+        <section id="dictionary">
+            <header>
+                <h1>Dictionary</h1>
+                <p lang="bo">ཚིག་མཛོད་</p>
+            </header>
+            <div class="content">
+                <input id="search" type="search" placeholder="Search...">
+                <div id="word-list"></div>
+            </div>
+        </section>
+        <section id="grammar">
+            <header>
+                <h1>Grammar</h1>
+                <p lang="bo">བརྡ་སྤྲོད་</p>
+            </header>
+            <div class="content">
+                <div id="lesson-list"></div>
+                <div id="lesson-view">
+                    <button id="lesson-back">Back</button>
+                    <div id="lesson-content"></div>
+                </div>
+            </div>
+        </section>
+        <section id="script">
+            <header>
+                <h1>Script</h1>
+                <p lang="bo">དབུ་ཅན་</p>
+            </header>
+            <div class="content">
+                <div id="letter-quiz">
+                    <p id="quiz-letter" lang="bo"></p>
+                    <div id="quiz-options"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <nav>
+        <button data-tab="study" class="active">
+            <span>Study</span>
+            <span lang="bo">སློབ་སྦྱོང་</span>
+        </button>
+        <button data-tab="dictionary">
+            <span>Dictionary</span>
+            <span lang="bo">ཚིག་མཛོད་</span>
+        </button>
+        <button data-tab="grammar">
+            <span>Grammar</span>
+            <span lang="bo">བརྡ་སྤྲོད་</span>
+        </button>
+        <button data-tab="script">
+            <span>Script</span>
+            <span lang="bo">དབུ་ཅན་</span>
+        </button>
+    </nav>
+    <script>
+        const words = [
+            {tibetan: "ཆུ་", wylie: "chu", ipa: "/tɕʰu˥/", english: "water"},
+            {tibetan: "ཇ་", wylie: "ja", ipa: "/tɕʰa˩˧/", english: "tea"},
+            {tibetan: "དེབ་", wylie: "deb", ipa: "/tʰep˩˧/", english: "book"},
+            {tibetan: "མེ་", wylie: "me", ipa: "/me˩˧/", english: "fire"},
+            {tibetan: "རི་བོ་", wylie: "ri bo", ipa: "/ɹi˩˧.wo˥/", english: "mountain"},
+            {tibetan: "ཤོག་བུ་", wylie: "shog bu", ipa: "/ɕoʔ˥˧.pu˥/", english: "paper"}
+        ];
+
+        const lessons = [
+            {
+                title: "To be: ཡིན་ and རེད་",
+                summary: "Personal vs. objective copula",
+                body: "Lhasa Tibetan has several verbs for 'to be'. <span lang=\"bo\">ཡིན་</span> is used when speaking about yourself (and asking someone about themselves). <span lang=\"bo\">རེད་</span> is used for statements about other people and things.",
+                examples: [
+                    {tibetan: "ང་སློབ་ཕྲུག་ཡིན།", wylie: "nga slob phrug yin", english: "I am a student."},
+                    {tibetan: "ཁོང་དགེ་རྒན་རེད།", wylie: "khong dge rgan red", english: "He/she is a teacher."},
+                    {tibetan: "འདི་དེབ་རེད།", wylie: "'di deb red", english: "This is a book."}
+                ]
+            }
+        ];
+
+        const DAY = 24 * 60 * 60 * 1000;
+        const saved = localStorage.getItem("progress");
+        const progress = saved ? JSON.parse(saved) : {};
+        function saveProgress() {
+            localStorage.setItem("progress", JSON.stringify(progress));
+        }
+
+        const savedDeck = localStorage.getItem("deck");
+        const deck = savedDeck ? JSON.parse(savedDeck) : [];
+
+        function saveDeck() {
+            localStorage.setItem("deck", JSON.stringify(deck));
+        }
+
+        function showWords(wordsToShow) {
+            const list = document.getElementById("word-list");
+            list.innerHTML = "";
+
+            if (wordsToShow.length === 0) {
+                list.innerHTML = "<p>No words found</p>";
+                return;
+            }
+            wordsToShow.forEach(function (word) {
+                const inDeck = deck.includes(word.wylie);
+                list.innerHTML += `
+                <div class="word">
+                    <p lang="bo">${word.tibetan}</p>
+                    <p class="ipa">${word.ipa}</p>
+                    <p class="answer">${word.wylie} · ${word.english}</p>
+                    ${inDeck
+                        ? `<button class="review-now" data-wylie="${word.wylie}">Review now</button>`
+                        : `<button class="add-card" data-wylie="${word.wylie}">Add to my cards</button>`
+                    }
+                </div>
+                `;
+            })
+        }
+        showWords(words);
+
+        document.getElementById("word-list").addEventListener("click", function (event) {
+                if (event.target.classList.contains("add-card")) {
+                    const wylie = event.target.dataset.wylie;
+                    if (!deck.includes(wylie)) {
+                        deck.push(wylie);
+                        saveDeck();
+                        event.target.textContent = "Review now";
+                        event.target.classList.replace("add-card", "review-now");
+                        buildQueue();
+                        showCard();
+                    }
+                } else if (event.target.classList.contains("review-now")) {
+                    const wylie = event.target.dataset.wylie;
+                    const word = words.find(function (w) { 
+                        return w.wylie === wylie;
+                    });
+                    const p = getProgress(word);
+                    p.interval = 0;
+                    p.due = Date.now();
+                    saveProgress();
+                    buildQueue();
+                    showCard();
+                    const btn = event.target;
+                    btn.textContent = "Added to review";
+                    setTimeout(function () {
+                        btn.textContent = "Review now";
+                    }, 1500);
+                }
+                });
+
+        const searchBox = document.getElementById("search");
+
+        searchBox.addEventListener("input", function () {
+            const query = searchBox.value.toLowerCase();
+            const results = words.filter(function (word) {
+                return word.english.toLowerCase().includes(query)
+                || word.wylie.toLowerCase().includes(query)
+                || word.tibetan.includes(query);
+            });
+            showWords(results);
+        })
+
+        const card = document.getElementById("flashcard");
+
+        function showCard() {
+            if (queue.length === 0) {
+                card.querySelector(".front").textContent = "All done!";
+                card.querySelector(".ipa").textContent = "";
+                card.querySelector(".answer").textContent = "";
+                card.classList.remove("flipped");
+                return;
+
+            }
+            const word = queue[0];
+            card.querySelector(".front").textContent = word.tibetan;
+            card.querySelector(".ipa").textContent = word.ipa;
+            card.querySelector(".answer").textContent = word.wylie + " · " + word.english;
+            card.classList.remove("flipped");
+        }
+
+        card.addEventListener("click", function (){
+            if (queue.length === 0) {
+                card.classList.remove("flipped");
+                return;
+            }
+            card.classList.toggle("flipped");
+        })
+
+        const goodButton = document.getElementById("good");
+        const againButton = document.getElementById("again");
+
+        function getProgress(word) {
+            if (!progress[word.wylie]) {
+                progress[word.wylie] = {interval: 0, due: 0};
+            }
+            return progress[word.wylie];
+        }
+
+        let queue = [];
+
+        function buildQueue() {
+            queue = words.filter(function (word) {
+                return getProgress(word).due <= Date.now() && deck.includes(word.wylie);
+            });
+        }
+
+        function rateGood() {
+            if (queue.length === 0) {
+                return;
+            }
+            const word = queue.shift();
+            const p = getProgress(word);
+            if (p.interval === 0) {
+                p.interval = 1;
+            } else {
+                p.interval = Math.min(p.interval * 2, 30);
+            }
+            p.due = Date.now() + p.interval * DAY;
+            saveProgress();
+            showCard();
+        }
+
+        function rateAgain() {
+            if (queue.length === 0) {
+                return;
+            }
+            const word = queue.shift();
+            const p = getProgress(word);
+            p.interval = 0;
+            p.due = Date.now();
+            queue.push(word);
+            saveProgress();
+            showCard();
+        }
+
+        goodButton.addEventListener("click", rateGood);
+
+        againButton.addEventListener("click", rateAgain);
+
+        const buttons = document.querySelectorAll("nav button");
+
+        buttons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                showScreen(button.dataset.tab);
+            });
+        });
+        function showScreen(name) {
+            document.querySelectorAll("section").forEach(function (section) {
+                section.classList.remove("active");
+            });
+            document.getElementById(name).classList.add("active");
+            document.querySelectorAll("nav button").forEach(function (btn) {
+                btn.classList.remove("active");
+            });
+            document.querySelector('nav button[data-tab="' + name + '"]').classList.add("active");
+            document.getElementById("grammar").classList.remove("reading");
+            localStorage.setItem("tab", name);
+        }
+
+        function showLessons(lessons) {
+            const list = document.getElementById("lesson-list");
+            list.innerHTML = "";
+            lessons.forEach(function (lesson, i) {
+                list.innerHTML += `
+                <div class="lesson-card" data-index="${i}">
+                    <h2>${lesson.title}</h2>
+                    <p>${lesson.summary}</p>
+                </div>
+                `;
+            });
+            list.querySelectorAll(".lesson-card").forEach(function (lessonCard) {
+                lessonCard.addEventListener("click", function () {
+                    openLesson(Number(lessonCard.dataset.index));
+                });
+            });
+        }
+        showLessons(lessons);
+        function openLesson(index) {
+            const lesson = lessons[index];
+            let html = `<h2>${lesson.title}</h2><p>${lesson.body}</p>`;
+
+            lesson.examples.forEach(function (ex) {
+                html += `
+                    <div class="example">
+                        <p lang="bo">${ex.tibetan}</p>
+                        <p class="answer">${ex.wylie}</p>
+                        <p>${ex.english}</p>
+                    </div>
+                `;
+            });
+
+            document.getElementById("lesson-content").innerHTML = html;
+            document.getElementById("grammar").classList.add("reading");
+        }
+
+        const lessonBack = document.getElementById("lesson-back");
+
+        lessonBack.addEventListener("click", function () {
+            document.getElementById("grammar").classList.remove("reading");
+        });
+
+        const letterGroups = [
+            [ {letter: "ཀ", wylie: "ka"}, {letter: "ཁ", wylie: "kha"}, {letter: "ག", wylie: "ga"}, {letter: "ང", wylie: "nga"} ],
+            [ {letter: "ཅ", wylie: "ca"}, {letter: "ཆ", wylie: "cha"}, {letter: "ཇ", wylie: "ja"}, {letter: "ཉ", wylie: "nya"} ],
+            [ {letter: "ཏ", wylie: "ta"}, {letter: "ཐ", wylie: "tha"}, {letter: "ད", wylie: "da"}, {letter: "ན", wylie: "na"} ],
+            [ {letter: "པ", wylie: "pa"}, {letter: "ཕ", wylie: "pha"}, {letter: "བ", wylie: "ba"}, {letter: "མ", wylie: "ma"} ],
+            [ {letter: "ཙ", wylie: "tsa"}, {letter: "ཚ", wylie: "tsha"}, {letter: "ཛ", wylie: "dza"}, {letter: "ཝ", wylie: "wa"} ],
+            [ {letter: "ཞ", wylie: "zha"}, {letter: "ཟ", wylie: "za"}, {letter: "འ", wylie: "'a"}, {letter: "ཡ", wylie: "ya"} ],
+            [ {letter: "ར", wylie: "ra"}, {letter: "ལ", wylie: "la"}, {letter: "ས", wylie: "sa"}, {letter: "ཤ", wylie: "sha"} ],
+            [ {letter: "ཧ", wylie: "ha"},{letter: "ཨ", wylie: "a"} ]
+        ];
+
+        function randomItem(list) {
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function shuffle(list) {
+            const copy = list.slice();
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        let quizAnswer = null;
+        let answered = false;
+        let lastLetter = null;
+
+        const savedStats = localStorage.getItem("letterStats");
+        const letterStats = savedStats ? JSON.parse(savedStats) : {};
+
+        function getStats(letter) {
+            if (!letterStats[letter]) {
+                letterStats[letter] = {right: 0, wrong: 0};
+            }
+            return letterStats[letter];
+        }
+
+        function letterWeight(letter) {
+            const s = getStats(letter);
+            return (s.wrong + 1) / (s.right + 1);
+        }
+
+        const allLetters = [];
+        letterGroups.forEach(function (group) {
+            group.forEach(function (item) {
+                allLetters.push({ item: item, group: group });
+            });
+        });
+
+        function pickLetter() {
+            let total = 0;
+            allLetters.forEach(function (entry) {
+                total += letterWeight(entry.item.letter);
+            });
+
+            let r = Math.random() * total;
+            for (const entry of allLetters) {
+                r -= letterWeight(entry.item.letter);
+                if (r <= 0) {
+                    return entry;
+                }
+            }
+            return allLetters[allLetters.length - 1];
+        }
+
+        function newQuestion() {
+            answered = false;
+            let entry = pickLetter();
+            while (entry.item.letter === lastLetter) {
+                entry = pickLetter();
+            }
+            quizAnswer = entry.item;
+            const group = entry.group;
+
+            lastLetter = quizAnswer.letter;
+            document.getElementById("quiz-letter").textContent = quizAnswer.letter;
+
+            const options = document.getElementById("quiz-options");
+            options.innerHTML = "";
+            shuffle(group).forEach(function (item) {
+                options.innerHTML += `<button class="quiz-option" data-wylie="${item.wylie}">${item.wylie}</button>`;
+            });
+
+            options.querySelectorAll(".quiz-option").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    checkAnswer(btn);
+                });
+            });
+        }
+
+        function checkAnswer(btn) {
+            if (answered) {
+                return;
+            }
+            answered = true;
+
+            const s = getStats(quizAnswer.letter);
+
+            if (btn.dataset.wylie === quizAnswer.wylie) {
+                s.right += 1;
+                btn.classList.add("correct");
+                setTimeout(newQuestion, 700);
+            } else {
+                s.wrong += 1;
+                btn.classList.add("wrong");
+                document.querySelector('.quiz-option[data-wylie="' + quizAnswer.wylie + '"]').classList.add("correct");
+                setTimeout(newQuestion, 1500);
+            }
+            localStorage.setItem("letterStats", JSON.stringify(letterStats));
+        }
+
+        newQuestion();
+        buildQueue();
+        showCard();
+        const savedTab = localStorage.getItem("tab");
+        if (savedTab) {
+            showScreen(savedTab);
+        }
+    </script>
+</body>
+</html>
