@@ -1,0 +1,11 @@
+{
+    "name": "Tibetan Study",
+    "short_name": "Tibetan",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "F7F2E8",
+    "theme_color": "7A1E24",
+    "icons": [
+        {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+    ]
+}
