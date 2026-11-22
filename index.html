@@ -560,6 +560,8 @@
             <span lang="bo">དབུ་ཅན་</span>
         </button>
     </nav>
+    <script src="word.js"></script>
+    <script src="lessons.js"></script>
     <script>
         function exportBackup() {
             const backup = {
@@ -602,15 +604,6 @@
                 }
             });
         });
-
-        const words = [
-            { tibetan: "ཆུ་", wylie: "chu", ipa: "/tɕʰu˥/", english: "water" },
-            { tibetan: "ཇ་", wylie: "ja", ipa: "/tɕʰa˩˧/", english: "tea" },
-            { tibetan: "དེབ་", wylie: "deb", ipa: "/tʰep˩˧/", english: "book" },
-            { tibetan: "མེ་", wylie: "me", ipa: "/me˩˧/", english: "fire" },
-            { tibetan: "རི་བོ་", wylie: "ri bo", ipa: "/ɹi˩˧.wo˥/", english: "mountain" },
-            { tibetan: "ཤོག་བུ་", wylie: "shog bu", ipa: "/ɕoʔ˥˧.pu˥/", english: "paper" }
-        ];
 
         const lessons = [
             {
@@ -822,19 +815,6 @@
         }
         showLessons(lessons);
         function openLesson(index) {
-            const lesson = lessons[index];
-            let html = `<h2>${lesson.title}</h2><p>${lesson.body}</p>`;
-
-            lesson.examples.forEach(function (ex) {
-                html += `
-                    <div class="example">
-                        <p lang="bo">${ex.tibetan}</p>
-                        <p class="answer">${ex.wylie}</p>
-                        <p>${ex.english}</p>
-                    </div>
-                `;
-            });
-
             document.getElementById("lesson-content").innerHTML = html;
             document.getElementById("grammar").classList.add("reading");
         }
