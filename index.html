@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-512.png">
     <meta name="theme-color" content="#7A1E24">
@@ -589,6 +590,9 @@
             file.text().then(function (text) {
                 try {
                     const backup = JSON.parse(text);
+                    if (!backup.progress || !backup.deck || !backup.letterStats) {
+                        throw new Error("Not a backup");
+                    }
                     localStorage.setItem("progress", JSON.stringify(backup.progress));
                     localStorage.setItem("deck", JSON.stringify(backup.deck));
                     localStorage.setItem("letterStats", JSON.stringify(backup.letterStats));
@@ -962,7 +966,7 @@
         }
 
         if("serviceWorker" in navigator) {
-            navigator.serviceworker.register("sw.js");
+            navigator.serviceWorker.register("sw.js");
         }
     </script>
 </body>
