@@ -54,6 +54,18 @@
             padding: 0px 0px 100px;
         }
 
+        #study.active {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100dvh - 100px);
+        }
+
+        #study .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
         nav button.active {
             background: #44080a;
         }
@@ -434,6 +446,36 @@
             text-align: center;
             margin-bottom: 16px;
         }
+
+        #backup {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+         #export-btn, #import-btn {
+            background: #7a1e24;
+            color: #F7F2E8;
+            border: none;
+            border-radius: 13px;
+            padding: 10px 16px;
+            font-size: 0.9em;
+            font-family: monospace;
+            margin: 8px 0;
+            transition: background 0.4s;
+        }
+
+        @media (hover: hover) {
+            #export-btn:hover, #import-btn:hover {
+                background: #5f1317;
+            }
+        }
+
+        #export-btn:active, #import-btn:active {
+            background: #44080a;
+            transition: none;
+        }
     </style>
 </head>
 
@@ -455,6 +497,11 @@
                 <div id="rating">
                     <button id="good">Got it</button>
                     <button id="again">Again</button>
+                </div>
+                <div id="backup">
+                    <button id="export-btn">Export backup</button>
+                    <label for="import-file" id="import-btn">Import backup</label>
+                    <input type="file" id="import-file" hidden>
                 </div>
             </div>
         </section>
@@ -513,6 +560,45 @@
         </button>
     </nav>
     <script>
+        function exportBackup() {
+            const backup = {
+                progress: progress,
+                deck: deck,
+                letterStats: letterStats
+            };
+            const json = JSON.stringify(backup);
+            const file = new File([json], "tibetan-backup.json", { type: "application/json" });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                navigator.share({files: [file] });
+            } else {
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(file);
+                a.download = "tibetan-backup.json";
+                a.click();
+            }
+        }
+
+        document.getElementById("export-btn").addEventListener("click", exportBackup);
+
+        document.getElementById("import-file").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+            file.text().then(function (text) {
+                try {
+                    const backup = JSON.parse(text);
+                    localStorage.setItem("progress", JSON.stringify(backup.progress));
+                    localStorage.setItem("deck", JSON.stringify(backup.deck));
+                    localStorage.setItem("letterStats", JSON.stringify(backup.letterStats));
+                    location.reload();
+                } catch (error) {
+                    alert("That file doesn't look like a backup.");
+                }
+            });
+        });
+
         const words = [
             { tibetan: "ཆུ་", wylie: "chu", ipa: "/tɕʰu˥/", english: "water" },
             { tibetan: "ཇ་", wylie: "ja", ipa: "/tɕʰa˩˧/", english: "tea" },
