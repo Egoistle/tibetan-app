@@ -827,13 +827,6 @@
             });
         }
 
-        function flashRefresh () {
-            if (queue.length > 0) {
-                document.getElementById("good").classList.remove("hidden");
-                document.getElementById("again").classList.remove("hidden");
-            }
-        }
-
         document.getElementById("word-list").addEventListener("click", function (event) {
             if (event.target.classList.contains("add-card")) {
                 const wylie = event.target.dataset.wylie;
@@ -862,7 +855,8 @@
                     btn.textContent = "Review now";
                 }, 1500);
             }
-            flashRefresh();
+            document.getElementById("good").classList.remove("hidden");
+            document.getElementById("again").classList.remove("hidden");
         });
 
         let page = 0;
