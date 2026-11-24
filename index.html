@@ -276,7 +276,8 @@
         }
 
         #search,
-        #sort-by {
+        #sort-by,
+        #pos-filter {
             box-sizing: content-box;
             min-width: 0;
             padding: 5px;
@@ -286,11 +287,12 @@
             border-radius: 6px;
             appearance: none;
             font-family: monospace;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         /* appearance: none removes the menu's arrow, so draw a small gold one */
-        #sort-by {
+        #sort-by,
+        #pos-filter {
             padding-right: 26px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0h10L5 6z' fill='%23d6a24a'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
@@ -322,6 +324,11 @@
             font-family: "Jomolhari", "Kailasa", serif;
         }
 
+        .pos {
+            font-style: italic;
+            color: var(--grey);
+        }
+
         /* page buttons and page number, centered under the list */
         #pagination {
             display: flex;
@@ -350,7 +357,7 @@
 
         /* hidden but still taking up space, so the other buttons don't jump around */
         #pagination .hidden,
-        #rating .hidden {
+        #rating.hidden {
             visibility: hidden;
         }
 
@@ -498,6 +505,10 @@
 
         #drill-start {
             margin: 35px auto;
+        }
+
+        #drill-content {
+            text-align: center;
         }
 
         /* the timer/score box and the best score box */
@@ -659,6 +670,18 @@
             <div class="content">
                 <div id="dict-controls">
                     <input id="search" type="search" placeholder="Search...">
+                    <select id="pos-filter">
+                        <option value="all">All</option>
+                        <option value="noun">Nouns</option>
+                        <option value="verb">verbs</option>
+                        <option value="adjective">Adjectives</option>
+                        <option value="adverb">Adverbs</option>
+                        <option value="pronouns">Pronouns</option>
+                        <option value="number">Numbers</option>
+                        <option value="question word">Question words</option>
+                        <option value="phrase">Phrases</option>
+                        <option value="particle">Particles</option>
+                    </select>
                     <select id="sort-by">
                         <option value="tibetan">Tibetan</option>
                         <option value="wylie">Wylie</option>
@@ -789,6 +812,18 @@
             });
         });
 
+        const posAbbr = {
+            "noun": "n.",
+            "verb": "v.",
+            "adjective": "adj.",
+            "adverb": "adv.",
+            "pronoun": "prn.",
+            "number": "num.",
+            "question word": "q.",
+            "phrase": "phr.",
+            "particle": "part."
+        };
+
         const DAY = 24 * 60 * 60 * 1000;
         const saved = localStorage.getItem("progress");
         const progress = saved ? JSON.parse(saved) : {};
@@ -818,6 +853,7 @@
                     <p lang="bo">${word.tibetan}</p>
                     <p class="ipa">${word.ipa}</p>
                     <p class="answer">${word.wylie} · ${word.english}</p>
+                    <p class="pos">${posAbbr[word.pos]}</p>
                     ${inDeck
                         ? `<button class="review-now" data-wylie="${word.wylie}">Review now</button>`
                         : `<button class="add-card" data-wylie="${word.wylie}">Add to my cards</button>`
@@ -855,8 +891,6 @@
                     btn.textContent = "Review now";
                 }, 1500);
             }
-            document.getElementById("good").classList.remove("hidden");
-            document.getElementById("again").classList.remove("hidden");
         });
 
         let page = 0;
@@ -874,13 +908,19 @@
             return copy;
         }
 
-        function refreshDictionary() {
+        function filterWords(list) {
             const query = searchBox.value.toLowerCase();
-            const results = words.filter(function (word) {
-                return word.english.toLowerCase().includes(query)
-                    || word.wylie.toLowerCase().includes(query)
-                    || word.tibetan.includes(query);
-            });
+            const pos = document.getElementById("pos-filter").value;
+            return list.filter(function (word) {
+                return (pos === "all" || word.pos === pos)
+                && (word.english.toLowerCase().includes(query)
+                || word.wylie.toLowerCase().includes(query)
+                || word.tibetan.includes(query));
+        });
+    }
+
+        function refreshDictionary() {
+            const results = filterWords(words);
             totalPages = Math.max(Math.ceil(results.length / 30), 1);
             document.getElementById("page-count").textContent = "Page " + (page + 1) + "/" + totalPages;
 
@@ -898,6 +938,11 @@
         });
 
         document.getElementById("sort-by").addEventListener("change", function () {
+            page = 0;
+            refreshDictionary();
+        });
+
+        document.getElementById("pos-filter").addEventListener("change", function () {
             page = 0;
             refreshDictionary();
         });
@@ -934,21 +979,19 @@
         const againButton = document.getElementById("again");
 
         function showCard() {
+            document.getElementById("rating").classList.toggle("hidden", queue.length === 0);
             if (queue.length === 0) {
-                document.getElementById("good").classList.add("hidden");
-                document.getElementById("again").classList.add("hidden");
                 card.querySelector(".front").textContent = "All done!";
                 card.querySelector(".ipa").textContent = "";
                 card.querySelector(".answer").textContent = "";
                 card.classList.remove("flipped");
-                flashRefresh();
                 return;
             }
-        const word = queue[0];
-        card.querySelector(".front").textContent = word.tibetan;
-        card.querySelector(".ipa").textContent = word.ipa;
-        card.querySelector(".answer").textContent = word.wylie + " · " + word.english;
-        card.classList.remove("flipped");
+            const word = queue[0];
+            card.querySelector(".front").textContent = word.tibetan;
+            card.querySelector(".ipa").textContent = word.ipa;
+            card.querySelector(".answer").textContent = word.wylie + " · " + word.english;
+            card.classList.remove("flipped");
         }
 
         card.addEventListener("click", function () {
