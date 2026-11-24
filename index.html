@@ -829,8 +829,8 @@
 
         function flashRefresh () {
             if (queue.length > 0) {
-                document.getElementById("good").classList.toggle("hidden");
-                document.getElementById("again").classList.toggle("hidden");
+                document.getElementById("good").classList.remove("hidden");
+                document.getElementById("again").classList.remove("hidden");
             }
         }
 
@@ -941,8 +941,8 @@
 
         function showCard() {
             if (queue.length === 0) {
-                document.getElementById("good").classList.toggle("hidden");
-                document.getElementById("again").classList.toggle("hidden");
+                document.getElementById("good").classList.add("hidden");
+                document.getElementById("again").classList.add("hidden");
                 card.querySelector(".front").textContent = "All done!";
                 card.querySelector(".ipa").textContent = "";
                 card.querySelector(".answer").textContent = "";
