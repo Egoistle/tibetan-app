@@ -6,7 +6,6 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-512.png">
     <meta name="theme-color" content="#7A1E24">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tibetan Study</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,100 +14,39 @@
         href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Jomolhari&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap"
         rel="stylesheet">
     <style>
+        /* ===== Colors =====
+           Defined once here, used everywhere with var(--name).
+           Change a color in this list and it updates across the whole app. */
+        :root {
+            --cream: #F7F2E8;
+            --ink: #292929;
+            --grey: #797979;
+            --gold: #d6a24a;
+            --beige: #ecdbc8;
+            --beige-pressed: #e1c6a8;
+            --maroon: #7A1E24;
+            --maroon-hover: #5f1317;
+            --maroon-pressed: #44080a;
+            --navy: #2f3f61;
+            --green: #8a9b7a;
+            --pink: #d8a6a6;
+        }
+
+        /* ===== Base ===== */
+        body {
+            margin: 0;
+            font-family: "DM Sans", system-ui, sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+        }
+
         [lang="bo"] {
             font-size: 1.95em;
             font-family: "Kailasa", serif;
         }
 
-        body {
-            margin: 0;
-            font-family: "DM Sans", system-ui, sans-serif;
-            background: #F7F2E8;
-            color: #292929;
-        }
-
-        nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            gap: 8px;
-            padding: 8px;
-            background: #F7F2E8;
-        }
-
-        nav button {
-            color: #F7F2E8;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #7A1E24;
-            border-radius: 18px;
-            border: none;
-            padding: 8px 0;
-            gap: 2px;
-        }
-
         main {
-            padding: 0px 0px 100px;
-        }
-
-        #study.active {
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100dvh - 100px);
-        }
-
-        #study .content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        nav button.active {
-            background: #44080a;
-        }
-
-        #word-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 35px;
-            justify-items: center;
-        }
-
-        .word {
-            background: #F7F2E8;
-            text-align: center;
-            padding: 16px 8px;
-            border-radius: 15px;
-            border-color: #d6a24a;
-            border-style: double;
-            border-width: 5px;
-            width: 100%;
-            max-width: 220px;
-        }
-
-        .word p {
-            margin: 4px 0;
-        }
-
-        .word [lang="bo"] {
-            font-size: 2.2em;
-            font-family: "Jomolhari", "Kailasa", serif;
-        }
-
-        .ipa {
-            font-size: 0.85em;
-            margin-bottom: 8px;
-            font-family: monospace;
-            color: #797979;
-        }
-
-        .answer {
-            font-family: courier, monospace;
-            margin-bottom: 8px;
+            padding: 0 0 100px;
         }
 
         section {
@@ -122,16 +60,16 @@
         header {
             position: sticky;
             top: 0;
-            background: #2f3f61;
+            background: var(--navy);
             padding: 10px 0;
-            text-align: center;
             margin-bottom: 10px;
+            text-align: center;
         }
 
         header h1,
         header p {
             margin: 2px;
-            color: #F7F2E8;
+            color: var(--cream);
         }
 
         header h1 {
@@ -141,7 +79,7 @@
 
         header [lang="bo"] {
             font-size: 2.4em;
-            font-family: "Kailasa";
+            font-family: "Kailasa", serif;
         }
 
         .content {
@@ -149,22 +87,127 @@
             font-family: monospace;
         }
 
-        #flashcard .back {
-            display: none;
+        .ipa {
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            font-family: monospace;
+            color: var(--grey);
         }
 
-        #flashcard.flipped .back {
+        .answer {
+            font-family: courier, monospace;
+            margin-bottom: 8px;
+        }
+
+        /* ===== Bottom tab bar ===== */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            background: var(--maroon);
+        }
+
+        nav button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 16px 0;
+            background: var(--maroon);
+            color: var(--cream);
+            border: none;
+            transition: background 0.8s;
+        }
+
+        @media (hover: hover) {
+            nav button:hover {
+                background: var(--maroon-hover);
+            }
+        }
+
+        nav button.active {
+            background: var(--maroon-pressed);
+        }
+
+        /* ===== Shared looks =====
+           Each look is written once and listed for every element that uses it. */
+
+        /* Cream cards with the gold double border */
+        .word,
+        #flashcard,
+        .lesson-card,
+        .example,
+        #syllable-drill.running #drill-content {
+            width: 100%;
+            background: var(--cream);
+            border: 5px double var(--gold);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        /* Cream buttons with the gold double border */
+        #rating button,
+        #lesson-back,
+        #drill-start,
+        #drill-read,
+        #drill-missed,
+        .quiz-option {
+            width: 100%;
+            padding: 16px;
+            background: var(--cream);
+            color: var(--ink);
+            border: 5px double var(--gold);
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-family: monospace;
+            text-align: center;
+            transition: background 0.8s;
+        }
+
+        /* ...and their size and spacing (the quiz options are sized by their grid instead) */
+        #rating button,
+        #lesson-back,
+        #drill-start,
+        #drill-read,
+        #drill-missed {
+            flex: 1;
             display: block;
+            max-width: 230px;
+            margin: 16px auto;
+        }
+
+        /* Maroon buttons */
+        #export-btn,
+        #import-btn,
+        #word-list button,
+        #script-modes button,
+        #pagination button {
+            padding: 10px 16px;
+            background: var(--maroon);
+            color: var(--cream);
+            border: none;
+            border-radius: 13px;
+            font-family: monospace;
+            transition: background 0.4s;
+        }
+
+        /* ===== Study tab ===== */
+        #study.active {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100dvh - 100px);
+        }
+
+        #study .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         #flashcard {
-            background: #F7F2E8;
-            border: #d6a24a;
-            border-style: double;
-            border-radius: 15px;
-            text-align: center;
-            border-width: 5px;
-            width: 100%;
             max-width: 230px;
             margin: 0 auto;
             padding: 5px;
@@ -180,20 +223,28 @@
             padding: 16px;
         }
 
-        #flashcard .ipa {
-            background: #ecdbc8;
+        #flashcard .back {
+            display: none;
+        }
+
+        #flashcard.flipped .back {
+            display: block;
+        }
+
+        #flashcard .ipa,
+        #flashcard .answer {
+            background: var(--beige);
             margin: 0;
+        }
+
+        #flashcard .ipa {
             padding-top: 40px;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+            border-radius: 10px 10px 0 0;
         }
 
         #flashcard .answer {
-            background: #ecdbc8;
-            margin: 0;
             padding-bottom: 40px;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
+            border-radius: 0 0 10px 10px;
         }
 
         #rating {
@@ -201,63 +252,108 @@
             gap: 10px;
         }
 
-        #rating button {
-            flex: 1;
-            display: block;
-            background: #F7F2E8;
-            border: #d6a24a double 5px;
-            border-radius: 15px;
-            text-align: center;
-            width: 100%;
-            max-width: 230px;
-            margin: 16px auto;
-            padding: 16px;
-            font-size: 1.1em;
-            font-family: monospace;
-            transition: background 0.8s;
-            color: #292929;
+        #backup {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: auto;
         }
 
-        @media (hover: hover) {
-            #again:hover {
-                background: #ecdbc8;
-            }
-
-            #good:hover {
-                background: #ecdbc8;
-            }
+        #export-btn,
+        #import-btn {
+            margin: 8px 0;
+            font-size: 0.9em;
         }
 
-        #again:active {
-            background: #d8a6a6;
-            transition: none;
+        /* ===== Dictionary tab ===== */
+        /* search box on the left, sort menu on the right */
+        #dict-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin: 5px 0 10px;
         }
 
-        #good:active {
-            background: #8a9b7a;
-            transition: none;
-        }
-
-        #search {
-            background: #ecdbc8;
-            display: block;
-            border-radius: 6px;
-            border-color: #d6a24a;
-            border-style: solid;
-            margin-top: 5px;
-            border-width: 2px;
-            padding: 5px;
-            appearance: none;
+        #search,
+        #sort-by {
             box-sizing: content-box;
+            min-width: 0;
+            padding: 5px;
+            background-color: var(--beige);
+            color: var(--ink);
+            border: 2px solid var(--gold);
+            border-radius: 6px;
+            appearance: none;
             font-family: monospace;
             font-size: 16px;
-            margin-bottom: 10px;
+        }
+
+        /* appearance: none removes the menu's arrow, so draw a small gold one */
+        #sort-by {
+            padding-right: 26px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0h10L5 6z' fill='%23d6a24a'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 9px center;
         }
 
         #search::placeholder {
             color: #494949;
         }
 
+        #word-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+            gap: 35px;
+        }
+
+        .word {
+            max-width: 220px;
+            padding: 16px 8px;
+        }
+
+        .word p {
+            margin: 4px 0;
+        }
+
+        .word [lang="bo"] {
+            font-size: 2.2em;
+            font-family: "Jomolhari", "Kailasa", serif;
+        }
+
+        /* page buttons and page number, centered under the list */
+        #pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin: 24px 0;
+        }
+
+        #pagination #last,
+        #pagination #first {
+            font-size: 0.75em;
+        }
+
+        #pagination button {
+            padding: 8px 10px;
+            font-family: "DM Sans", sans-serif;
+            font-size: 0.85em;
+        }
+
+        #page-count {
+            margin: 0 4px;
+            font-family: "DM Sans", sans-serif;
+            white-space: nowrap;
+        }
+
+        /* hidden but still taking up space, so the other buttons don't jump around */
+        #pagination .hidden {
+            visibility: hidden;
+        }
+
+        /* ===== Grammar tab ===== */
         #lesson-view {
             display: none;
         }
@@ -270,139 +366,82 @@
             display: block;
         }
 
+        .lesson-card,
+        .example {
+            max-width: 230px;
+            margin: 16px auto;
+            padding: 16px;
+            font-size: 1.1em;
+            font-family: monospace;
+        }
+
         .lesson-card {
-            background: #F7F2E8;
-            border: #d6a24a double 5px;
-            border-radius: 15px;
-            text-align: center;
-            width: 100%;
-            max-width: 230px;
-            margin: 16px auto;
-            padding: 16px;
-            font-size: 1.1em;
-            font-family: monospace;
             transition: background 0.8s;
-            color: #292929;
         }
 
-        @media (hover: hover) {
-            .lesson-card:hover {
-                background: #eddbc8;
-            }
-        }
-
-        .lesson-card:active {
-            background: #e1c6a8;
-            transition: none;
-        }
-
-
-        .lesson-card h2 {
-            font-size: 1.6em;
-            font-family: "DM Sans", "Jomolhari", sans-serif;
-        }
-
-        .lesson-card p {
-            font-size: 1.1em;
-            font-family: monospace;
-        }
-
-        #lesson-back {
-            background: #F7F2E8;
-            display: block;
-            border: #d6a24a double 5px;
-            border-radius: 15px;
-            text-align: center;
-            width: 100%;
-            max-width: 230px;
-            margin: 16px auto;
-            padding: 16px;
-            font-size: 1.1em;
-            font-family: monospace;
-            transition: background 0.8s;
-            color: #292929;
-        }
-
-        @media (hover: hover) {
-            #lesson-back:hover {
-                background: #ecdbc8;
-            }
-        }
-
-        #lesson-back:active {
-            background: #e1c6a8;
-            transition: none;
-        }
-
+        .lesson-card h2,
         #lesson-content h2 {
             font-size: 1.6em;
             font-family: "DM Sans", "Jomolhari", sans-serif;
         }
 
+        .lesson-card p,
         #lesson-content p {
             font-size: 1.1em;
             font-family: monospace;
         }
 
-        .example {
-            background: #F7F2E8;
-            border: #d6a24a double 5px;
-            border-radius: 15px;
-            text-align: center;
-            width: 100%;
-            max-width: 230px;
-            margin: 16px auto;
-            padding: 16px;
-            font-size: 1.1em;
-            font-family: monospace;
-            color: #292929;
-        }
-
-        #lesson-content .example [lang="bo"] {
-            font-size: 1.2em;
-            font-family: "Kailasa", serif;
-        }
-
+        #lesson-content .example [lang="bo"],
         #lesson-content p [lang="bo"] {
             font-size: 1.2em;
             font-family: "Kailasa", serif;
+        }
+
+        /* ===== Script tab: mode buttons ===== */
+        #script-modes {
+            display: flex;
+            justify-content: space-between;
+            /* the negative side margins cancel .content's 16px padding,
+               so the buttons reach the screen edges */
+            margin: 0 -16px;
+        }
+
+        #script-modes button {
+            margin-top: 8px;
+            font-size: 1.6em;
+        }
+
+        /* only the inner corners are rounded */
+        #script-modes [data-mode="letters"] {
+            border-radius: 0 13px 13px 0;
+        }
+
+        #script-modes [data-mode="syllables"] {
+            border-radius: 13px 0 0 13px;
+        }
+
+        /* ===== Script tab: letter quiz ===== */
+        #quiz-letter {
+            font-size: 3em;
+            font-family: "Jomolhari", "Kailasa", serif;
+            text-align: center;
+            margin-bottom: 16px;
         }
 
         #quiz-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            background: #F7F2E8;
         }
 
         .quiz-option {
-            background: #F7F2E8;
-            border: #d6a24a double 5px;
-            border-radius: 15px;
-            text-align: center;
-            width: 100%;
-            padding: 16px;
-            font-size: 1.1em;
-            font-family: monospace;
             transition: background 0.8s, color 0.6s;
-            color: #292929;
-        }
-
-        @media (hover: hover) {
-            .quiz-option:hover {
-                background: #ecdbc8;
-            }
-        }
-
-        .quiz-option:active {
-            background: #e1c6a8;
-            transition: 0.3s;
         }
 
         @keyframes to-correct {
             0% {
-                background: #F7F2E8;
-                color: #292929;
+                background: var(--cream);
+                color: var(--ink);
             }
 
             50% {
@@ -411,19 +450,15 @@
             }
 
             100% {
-                background: #8a9b7a;
-                color: #F7F2E8;
+                background: var(--green);
+                color: var(--cream);
             }
-        }
-
-        .quiz-option.correct {
-            animation: to-correct 0.4s forwards;
         }
 
         @keyframes to-wrong {
             0% {
-                background: #F7F2E8;
-                color: #292929;
+                background: var(--cream);
+                color: var(--ink);
             }
 
             50% {
@@ -432,49 +467,158 @@
             }
 
             100% {
-                background: #d8a6a6;
-                color: #F7F2E8;
+                background: var(--pink);
+                color: var(--cream);
             }
+        }
+
+        .quiz-option.correct {
+            animation: to-correct 0.4s forwards;
         }
 
         .quiz-option.wrong {
             animation: to-wrong 0.4s forwards;
         }
 
-        #quiz-letter {
-            font-size: 3em;
-            font-family: "Jomolhari", "Kailasa", serif;
-            text-align: center;
-            margin-bottom: 16px;
+        /* ===== Script tab: syllable drill ===== */
+        #syllable-drill,
+        #drill-rating,
+        #drill-back {
+            display: none;
         }
 
-        #backup {
+        #script.syllables #letter-quiz {
+            display: none;
+        }
+
+        #script.syllables #syllable-drill {
+            display: block;
+        }
+
+        #drill-start {
+            margin: 35px auto;
+        }
+
+        /* the timer/score box and the best score box */
+        #drill-stats,
+        #drill-best {
+            display: grid;
+            justify-items: center;
+            gap: 2px;
+            width: 100%;
+            max-width: 100px;
+            margin: auto;
+            padding: 15px;
+            background: var(--beige);
+            border: 8px double var(--cream);
+            border-radius: 30px;
+            font-family: "DM Sans", sans-serif;
+        }
+
+        #syllable-drill.running #drill-rating {
             display: flex;
-            justify-content: center;
             gap: 10px;
-            margin-top: auto;
         }
 
-         #export-btn, #import-btn {
-            background: #7a1e24;
-            color: #F7F2E8;
-            border: none;
-            border-radius: 13px;
-            padding: 10px 16px;
-            font-size: 0.9em;
+        #syllable-drill.running #drill-start {
+            display: none;
+        }
+
+        #syllable-drill.revealed #drill-back {
+            display: block;
+        }
+
+        #syllable-drill.running #drill-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            max-width: 210px;
+            margin: 35px auto;
+        }
+
+        #syllable-drill.running #drill-ipa {
+            margin-top: 8px;
+            font-size: 0.85em;
             font-family: monospace;
-            margin: 8px 0;
-            transition: background 0.4s;
+            color: var(--grey);
         }
 
+        #syllable-drill.running #drill-answer {
+            margin-bottom: 8px;
+            font-size: 1.2em;
+            font-family: courier, monospace;
+        }
+
+        /* the revealed rules must stay below the running ones to win */
+        #syllable-drill.revealed #drill-ipa,
+        #syllable-drill.revealed #drill-answer {
+            margin: 0;
+            background: var(--beige);
+        }
+
+        #syllable-drill.revealed #drill-ipa {
+            padding: 20px 0 5px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        #syllable-drill.revealed #drill-answer {
+            padding: 5px 0 20px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* ===== Hover and pressed states =====
+           Kept together at the end: :active must come after :hover to win. */
         @media (hover: hover) {
-            #export-btn:hover, #import-btn:hover {
-                background: #5f1317;
+
+            #good:hover,
+            #again:hover,
+            #lesson-back:hover,
+            #drill-start:hover,
+            #drill-read:hover,
+            #drill-missed:hover,
+            .lesson-card:hover,
+            .quiz-option:hover {
+                background: var(--beige);
+            }
+
+            #export-btn:hover,
+            #import-btn:hover,
+            #word-list button:hover,
+            #script-modes button:hover,
+            #pagination button:hover {
+                background: var(--maroon-hover);
             }
         }
 
-        #export-btn:active, #import-btn:active {
-            background: #44080a;
+        #good:active,
+        #drill-read:active {
+            background: var(--green);
+            transition: none;
+        }
+
+        #again:active,
+        #drill-missed:active {
+            background: var(--pink);
+            transition: none;
+        }
+
+        #lesson-back:active,
+        .lesson-card:active {
+            background: var(--beige-pressed);
+            transition: none;
+        }
+
+        .quiz-option:active {
+            background: var(--beige-pressed);
+            transition: 0.3s;
+        }
+
+        #export-btn:active,
+        #import-btn:active,
+        #word-list button:active,
+        #script-modes button:active,
+        #script-modes button.active,
+        #pagination button:active {
+            background: var(--maroon-pressed);
             transition: none;
         }
     </style>
@@ -512,8 +656,22 @@
                 <p lang="bo">ཚིག་མཛོད་</p>
             </header>
             <div class="content">
-                <input id="search" type="search" placeholder="Search...">
+                <div id="dict-controls">
+                    <input id="search" type="search" placeholder="Search...">
+                    <select id="sort-by">
+                        <option value="tibetan">Tibetan</option>
+                        <option value="wylie">Wylie</option>
+                        <option value="english">English</option>
+                    </select>
+                </div>
                 <div id="word-list"></div>
+                <div id="pagination">
+                    <button id="first">First</button>
+                    <button id="previous">Previous</button>
+                    <p id="page-count"></p>
+                    <button id="next">Next</button>
+                    <button id="last">Last</button>
+                </div>
             </div>
         </section>
         <section id="grammar">
@@ -535,9 +693,32 @@
                 <p lang="bo">དབུ་ཅན་</p>
             </header>
             <div class="content">
+                <div id="script-modes">
+                    <button data-mode="letters" class="active">Letters</button>
+                    <button data-mode="syllables">Syllables</button>
+                </div>
                 <div id="letter-quiz">
                     <p id="quiz-letter" lang="bo"></p>
                     <div id="quiz-options"></div>
+                </div>
+                <div id="syllable-drill">
+                    <div id="drill-stats">
+                        <span id="drill-timer">60</span>
+                        <span id="drill-score">0</span>
+                    </div>
+                    <div id="drill-content">
+                        <p id="drill-syllable" lang="bo"></p>
+                        <div id="drill-back">
+                            <p id="drill-ipa" class="ipa"></p>
+                            <p id="drill-answer" class="answer"></p>
+                        </div>
+                    </div>
+                    <button id="drill-start">Start</button>
+                    <div id="drill-rating">
+                        <button id="drill-missed">Missed</button>
+                        <button id="drill-read">Read it</button>
+                    </div>
+                    <p id="drill-best"></p>
                 </div>
             </div>
         </section>
@@ -560,8 +741,10 @@
             <span lang="bo">དབུ་ཅན་</span>
         </button>
     </nav>
-    <script src="word.js"></script>
+    <script src="words.js"></script>
     <script src="lessons.js"></script>
+    <script src="syllables.js"></script>
+    <script src="tibetan-sort.js"></script>
     <script>
         function exportBackup() {
             const backup = {
@@ -573,7 +756,7 @@
             const file = new File([json], "tibetan-backup.json", { type: "application/json" });
 
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({files: [file] });
+                navigator.share({ files: [file] });
             } else {
                 const a = document.createElement("a");
                 a.href = URL.createObjectURL(file);
@@ -627,7 +810,7 @@
                 list.innerHTML = "<p>No words found</p>";
                 return;
             }
-            wordsToShow.forEach(function (word) {
+            wordsToShow.slice(page * 30, page * 30 + 30).forEach(function (word) {
                 const inDeck = deck.includes(word.wylie);
                 list.innerHTML += `
                 <div class="word">
@@ -640,9 +823,8 @@
                     }
                 </div>
                 `;
-            })
+            });
         }
-        showWords(words);
 
         document.getElementById("word-list").addEventListener("click", function (event) {
             if (event.target.classList.contains("add-card")) {
@@ -674,17 +856,74 @@
             }
         });
 
-        const searchBox = document.getElementById("search");
+        let page = 0;
+        let totalPages = 1;
 
-        searchBox.addEventListener("input", function () {
+        function sortWords(list) {
+            const by = document.getElementById("sort-by").value;
+            const copy = list.slice();
+            copy.sort(function (a, b) {
+                if (by === "tibetan") {
+                    return compareTibetan(a.tibetan, b.tibetan);
+                }
+                return (a[by].replace(/'/g, "")).localeCompare(b[by].replace(/'/g, ""));
+            });
+            return copy;
+        }
+
+        function refreshDictionary() {
             const query = searchBox.value.toLowerCase();
             const results = words.filter(function (word) {
                 return word.english.toLowerCase().includes(query)
                     || word.wylie.toLowerCase().includes(query)
                     || word.tibetan.includes(query);
             });
-            showWords(results);
-        })
+            totalPages = Math.max(Math.ceil(results.length / 30), 1);
+            document.getElementById("page-count").textContent = "Page " + (page + 1) + "/" + totalPages;
+
+            // First only from the 2nd page on, Last only until 3 pages before the end
+            document.getElementById("first").classList.toggle("hidden", page < 1);
+            document.getElementById("last").classList.toggle("hidden", page > totalPages - 2);
+            const sorted = sortWords(results);
+            showWords(sorted);
+        }
+
+        const searchBox = document.getElementById("search");
+        searchBox.addEventListener("input", function () {
+            page = 0;
+            refreshDictionary();
+        });
+
+        document.getElementById("sort-by").addEventListener("change", function () {
+            page = 0;
+            refreshDictionary();
+        });
+
+        document.getElementById("next").addEventListener("click", function () {
+            if (page < totalPages - 1) {
+                page += 1;
+                refreshDictionary();
+            }
+        });
+
+        document.getElementById("first").addEventListener("click", function () {
+            page = 0;
+            refreshDictionary();
+        });
+
+        document.getElementById("last").addEventListener("click", function () {
+            page = totalPages - 1;
+            refreshDictionary();
+        });
+
+        document.getElementById("previous").addEventListener("click", function () {
+            if (page > 0) {
+                page -= 1;
+                refreshDictionary();
+            }
+        });
+
+        refreshDictionary();
 
         const card = document.getElementById("flashcard");
 
@@ -771,6 +1010,7 @@
             });
         });
         function showScreen(name) {
+            stopDrillIfRunning();
             document.querySelectorAll("section").forEach(function (section) {
                 section.classList.remove("active");
             });
@@ -937,6 +1177,130 @@
             localStorage.setItem("letterStats", JSON.stringify(letterStats));
         }
 
+        let currentSyllable = null;
+        let recentSyllables = [];
+
+        function nextSyllable() {
+            let s = randomItem(syllables);
+            while (recentSyllables.includes(s.wylie)) {
+                s = randomItem(syllables);
+            }
+
+            recentSyllables.push(s.wylie);
+            if (recentSyllables.length > 2) {
+                recentSyllables.shift();
+            }
+
+            currentSyllable = s;
+            document.getElementById("drill-syllable").textContent = s.tibetan;
+            document.getElementById("drill-answer").textContent = "";
+            document.getElementById("drill-ipa").textContent = "";
+            drill.classList.remove("revealed");
+        }
+
+        document.getElementById("drill-syllable").addEventListener("click", function () {
+            document.getElementById("drill-answer").textContent = currentSyllable.wylie;
+            document.getElementById("drill-ipa").textContent = currentSyllable.ipa;
+            drill.classList.add("revealed");
+        });
+
+        const DRILL_LENGTH = 60;
+        const drill = document.getElementById("syllable-drill");
+        let drillTime = DRILL_LENGTH;
+        let drillScore = 0;
+        let drillTimer = null;
+        let bestScore = Number(localStorage.getItem("bestScore"));
+
+        function updateDrillStats() {
+            document.getElementById("drill-timer").textContent = drillTime;
+            document.getElementById("drill-score").textContent = drillScore;
+            document.getElementById("drill-best").textContent = "Best: " + bestScore;
+        }
+
+        function startDrill() {
+            drillTime = DRILL_LENGTH;
+            drillScore = 0;
+            drill.classList.add("running");
+            nextSyllable();
+            updateDrillStats();
+            drillTimer = setInterval(tick, 1000);
+        }
+
+        function tick() {
+            drillTime -= 1;
+            updateDrillStats();
+            if (drillTime === 0) {
+                endDrill();
+            }
+        }
+
+        document.getElementById("drill-start").addEventListener("click", startDrill);
+        updateDrillStats();
+
+        const readButton = document.getElementById("drill-read")
+        const missedButton = document.getElementById("drill-missed")
+
+        function rateRead() {
+            drillScore += 1;
+            nextSyllable();
+            updateDrillStats();
+        }
+
+        function rateMissed() {
+            nextSyllable();
+        }
+
+        readButton.addEventListener("click", rateRead);
+        missedButton.addEventListener("click", rateMissed);
+
+        function endDrill() {
+            clearInterval(drillTimer);
+            drill.classList.remove("running");
+            if (drillScore > bestScore) {
+                bestScore = drillScore;
+                localStorage.setItem("bestScore", bestScore);
+            }
+            updateDrillStats();
+
+            document.getElementById("drill-syllable").textContent = "Time's up!";
+            document.getElementById("drill-answer").textContent = "";
+            document.getElementById("drill-ipa").textContent = "";
+            drill.classList.remove("revealed");
+        }
+
+        const modeButtons = document.querySelectorAll("#script-modes button");
+
+        function showMode(mode) {
+            if (mode === "syllables") {
+                document.getElementById("script").classList.add("syllables");
+            } else {
+                document.getElementById("script").classList.remove("syllables");
+                stopDrillIfRunning();
+            }
+
+            modeButtons.forEach(function (btn) {
+                btn.classList.remove("active");
+            });
+            document.querySelector('#script-modes [data-mode="' + mode + '"]').classList.add("active");
+
+            localStorage.setItem("scriptMode", mode);
+        }
+
+        modeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                showMode(button.dataset.mode);
+            });
+        });
+
+        function stopDrillIfRunning() {
+            if (drill.classList.contains("running")) {
+                endDrill();
+                document.getElementById("drill-syllable").textContent = "";
+                document.getElementById("drill-answer").textContent = "";
+                document.getElementById("drill-ipa").textContent = "";
+            }
+        }
+
         newQuestion();
         buildQueue();
         showCard();
@@ -944,8 +1308,12 @@
         if (savedTab) {
             showScreen(savedTab);
         }
+        const scriptMode = localStorage.getItem("scriptMode");
+        if (scriptMode) {
+            showMode(scriptMode);
+        }
 
-        if("serviceWorker" in navigator) {
+        if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("sw.js");
         }
     </script>
