@@ -1068,6 +1068,7 @@
             });
             document.querySelector('nav button[data-tab="' + name + '"]').classList.add("active");
             document.getElementById("grammar").classList.remove("reading");
+            localStorage.removeItem("lesson");
             localStorage.setItem("tab", name);
         }
 
@@ -1090,6 +1091,7 @@
         }
         showLessons(lessons);
         function openLesson(index) {
+            localStorage.setItem("lesson", index);
             const lesson = lessons[index];
             let html = `<h2>${lesson.title}</h2><p>${lesson.body}</p>`;
 
@@ -1097,12 +1099,13 @@
                 html += `
                     <div class="example">
                         <p lang="bo">${ex.tibetan}</p>
+                        <p class="ipa">${ex.ipa}</p>
                         <p class="answer">${ex.wylie}</p>
                         <p>${ex.english}</p>
                     </div>
                 `;
             });
-
+            
             document.getElementById("lesson-content").innerHTML = html;
             document.getElementById("grammar").classList.add("reading");
         }
@@ -1111,6 +1114,7 @@
 
         lessonBack.addEventListener("click", function () {
             document.getElementById("grammar").classList.remove("reading");
+            localStorage.removeItem("lesson");
         });
 
         const letterGroups = [
@@ -1352,9 +1356,14 @@
         newQuestion();
         buildQueue();
         showCard();
+
+        const savedLesson = localStorage.getItem("lesson");
         const savedTab = localStorage.getItem("tab");
         if (savedTab) {
             showScreen(savedTab);
+        }
+        if (savedLesson) {
+            openLesson(Number(savedLesson));
         }
         const scriptMode = localStorage.getItem("scriptMode");
         if (scriptMode) {

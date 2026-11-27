@@ -65,7 +65,7 @@ const words = [
     { tibetan: "ད་ལྟ་", wylie: "da lta", ipa: "/tʰa˩˧.ta˥/", english: "now", pos: "adverb" },
     { tibetan: "དུས་ཚོད་", wylie: "dus tshod", ipa: "/tʰyː˩˧.tsʰøʔ˥/", english: "time", pos: "noun" },
     { tibetan: "དེ་རིང་", wylie: "de ring", ipa: "/tʰe˩˧.ɹiŋ˥/", english: "today", pos: "adverb" },
-    { tibetan: "དེབ་", wylie: "deb", ipa: "/tʰep˩˧/", english: "book", pos: "noun" },
+    { tibetan: "དེབ་", wylie: "deb", ipa: "/tʰep˩˧˨/", english: "book", pos: "noun" },
     { tibetan: "དྲུག་", wylie: "drug", ipa: "/ʈʰuʔ˩˧˨/", english: "six", pos: "number" },
     { tibetan: "བདུན་", wylie: "bdun", ipa: "/tỹ˩˧/", english: "seven", pos: "number" },
     { tibetan: "འདུག་", wylie: "'dug", ipa: "/tuʔ˩˧˨/", english: "to exist, to have (seen)", pos: "verb" },
